@@ -1,0 +1,48 @@
+﻿<UserControl x:Class="CoffeeFlow.Views.NodeListWindow"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" x:Name="nodeList" d:DesignWidth="300"  DataContext="{Binding Source={StaticResource Locator}}" Loaded="nodeList_Loaded" Height="379" Width="350">
+    <Grid >
+        <Grid.RowDefinitions>
+            <RowDefinition Height="100"/>
+            <RowDefinition Height="127*"/>
+        </Grid.RowDefinitions>
+        <ListBox HorizontalAlignment="Stretch" Margin="10,10,10,10" ScrollViewer.VerticalScrollBarVisibility="Visible" ScrollViewer.HorizontalScrollBarVisibility="Hidden" x:Name="lstAvailableNodes" ItemsSource="{Binding ElementName=nodeList, Path=AvailableNodes}" VerticalAlignment="Stretch" Grid.RowSpan="1" Grid.Row="1">
+
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Width="280">
+                            <StackPanel.InputBindings>
+                                <MouseBinding MouseAction="LeftClick" Command="{Binding DataContext.Network.AddNodeToGridCommand,
+                                        RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type UserControl}}}"
+                                      CommandParameter="{Binding .}"/>
+                            </StackPanel.InputBindings>
+                            <TextBlock Text="{Binding Path=NodeName}" HorizontalAlignment="Left">
+
+                            </TextBlock>
+                            <TextBlock Text="{Binding Path=DetailString}" FontSize="10" Margin="5,0,0,0" VerticalAlignment="Center" Height="Auto" Width="250" TextWrapping="Wrap" Foreground="Gray"></TextBlock>
+                        </StackPanel>
+                        <StackPanel HorizontalAlignment="Right">
+                            <Button Style="{StaticResource DarkButton}" Name="DeleteButton"  Content="✖" Width="15" Margin="0" FontSize="9" Background="#02DDDDDD" HorizontalAlignment="Right" IsEnabled="{Binding Path=IsDeletable}" Visibility="{Binding Path=IsDeletable, Converter={StaticResource enableToVisibilityConverter}}"  Command="{Binding DataContext.Main.DeleteNodeFromNodeListCommand, RelativeSource={RelativeSource FindAncestor, 
+                                        AncestorType={x:Type UserControl}}}" CommandParameter="{Binding .}" Foreground="#FFD67272" BorderBrush="#00707070" />
+                        </StackPanel>
+                    </DockPanel>
+                    
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <Button Content="Variables" x:Name="btnVariables" Style="{StaticResource DarkButton}" Command="{Binding ElementName=nodeList, Path=ShowVariablesCommand}" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="State" x:Name="btnTriggers" Style="{StaticResource DarkButton}" Command="{Binding ElementName=nodeList, Path=ShowTriggersCommand}" HorizontalAlignment="Left" Margin="90,46,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Visibility="Collapsed" Content="Events" x:Name="btnEvents" Style="{StaticResource DarkButton}" Command="{Binding ElementName=nodeList, Path=ShowEventsCommand}" HorizontalAlignment="Left" Margin="10,46,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Methods" x:Name="btnInsight" Style="{StaticResource DarkButton}" Command="{Binding ElementName=nodeList, Path=ShowMethodsCommand}" HorizontalAlignment="Left" Margin="10,76,0,0" VerticalAlignment="Top" Width="155" Grid.RowSpan="2"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="180,75,0,0" TextWrapping="Wrap" x:Name="searchBox" Text=""  VerticalAlignment="Top" Width="160" TextChanged="TextBox_TextChanged"/>
+        <TextBlock HorizontalAlignment="Left" Margin="180,54,0,0" TextWrapping="Wrap" Text="Search" VerticalAlignment="Top" Foreground="White"/>
+        <Label Content="C# Code Logic" HorizontalAlignment="Left" Margin="14,7,0,0" VerticalAlignment="Top" Foreground="#FFE8E8E8" FontSize="18"/>
+
+
+    </Grid>
+</UserControl>

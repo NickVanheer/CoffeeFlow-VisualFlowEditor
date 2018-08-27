@@ -1,0 +1,52 @@
+﻿<base:NodeViewModel x:Class="CoffeeFlow.Nodes.VariableNode"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:base="clr-namespace:CoffeeFlow.Base"
+             xmlns:valueConverters="clr-namespace:CoffeeFlow.ValueConverters"
+             mc:Ignorable="d" 
+             d:DesignHeight="100" Height="90" Width="250">
+
+    <Border Margin="0" 
+                BorderThickness="2,2,2,2"
+                CornerRadius="32">
+        <Border.Background>
+            <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
+                <GradientStop Color="#FF125D23" Offset="0"/>
+                <GradientStop Color="#FF4AA670" Offset="0.987"/>
+            </LinearGradientBrush>
+        </Border.Background>
+        <Grid>
+
+            <Label Content="{Binding DataContext.Type, Converter={StaticResource toUpperConverter}}"  HorizontalAlignment="Center" Margin="0 0 0 0" FontSize="14" FontFamily="Trebuchet MS" Foreground="#3FFBFBFB" VerticalAlignment="Top" />
+            <base:Connector ConnectorType="NodeParameter" x:Name="NodeParameterOut" HorizontalAlignment="Right" Margin="0,24,-9,46" VerticalAlignment="Center" Height="16"/>
+            <Label Content="{Binding DataContext.NodeName}" HorizontalAlignment="Center" Margin="0,15,0,0"  FontSize="22" />
+
+            <DockPanel Background="#FF272626" Height="29"  VerticalAlignment="Bottom">
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Height="Auto">
+                    <Label Content="{Binding DataContext.CallingClass}" VerticalAlignment="Center" Foreground="#FFC7C7C7"></Label>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Height="Auto" Margin="0">
+                    <Label Content="ID:" FontSize="10" Foreground="#FFD4D4D4" VerticalAlignment="Center"></Label>
+                    <Label Content="{Binding DataContext.ID}" VerticalAlignment="Center" Foreground="#FFC7C7C7"></Label>
+
+                    <Button Style="{StaticResource DarkButton}" Name="DeleteButton" Content="✖" Width="15" Margin="0" FontSize="9" Background="#02DDDDDD" HorizontalAlignment="Right"  DataContext="{Binding Source={StaticResource Locator}}" Command="{Binding Network.DeleteNodesCommand}" CommandParameter="{Binding RelativeSource=
+                                   {RelativeSource
+                                    Mode=FindAncestor,
+                                    AncestorType={x:Type UserControl}}}" Foreground="#FFD67272" BorderBrush="#00707070" />
+                </StackPanel>
+
+            </DockPanel>
+
+
+        </Grid>
+        <Border.Effect>
+            <DropShadowEffect Color="Gray" Opacity="0.5" />
+        </Border.Effect>
+
+
+    </Border>
+
+
+</base:NodeViewModel>
