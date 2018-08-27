@@ -77,7 +77,7 @@ namespace CoffeeFlow.Base
 
             }
         }
-        private static int TotalIDCount = 0;
+        public static int TotalIDCount = 0;
 
         public string NodeName
         {
@@ -114,6 +114,10 @@ namespace CoffeeFlow.Base
             this.ID = node.ID;
             this.NodeName = node.NodeName;
             this.Margin = new Thickness(node.MarginX, node.MarginY, 0, 0);
+
+            //decreases potential for duplicate nodes when loading in nodes from file by making sure IDs of new nodes can never be within the range of the files' nodes
+            if (this.ID > TotalIDCount)
+                TotalIDCount = this.ID;
         }
 
         public bool IsSelected {

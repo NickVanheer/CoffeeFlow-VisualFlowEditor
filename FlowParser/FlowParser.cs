@@ -182,7 +182,7 @@ namespace UnityFlow
                     caller = item;
             }
 
-            object result = caller.GetType().GetField(varName).GetValue(null);
+            object result = caller.GetType().GetField(varName).GetValue(caller);
 
             if(result != null)
                 return (bool)result;
@@ -214,7 +214,7 @@ namespace UnityFlow
             {
                 if (argument.ArgIsExistingVariable) //parameter from runtime field
                 {
-                    object result = caller.GetType().GetField(argument.ArgExistingVariableName).GetValue(null);
+                    object result = caller.GetType().GetField(argument.ArgExistingVariableName).GetValue(caller);
                     argumentList.Add(result);
                 }
                 else //new parameter from XML
