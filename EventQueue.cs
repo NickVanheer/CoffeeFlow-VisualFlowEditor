@@ -28,6 +28,7 @@ public abstract class Event
 
     public virtual void EventEnd()
     {
+        IsFinished = true;
     }
 }
 
