@@ -36,6 +36,9 @@ namespace CoffeeFlow.Base
         public int gridSize = 0;
         public int defaultGridSize = 40;
         public Point GridOffset = new Point(0, 0);
+        public string DebugTest = "";
+
+        //
         private Point lastGridOffset = new Point(0, 0);
         private Point defaultGridOffset = new Point(0, 0);
         private Point gridLastPos = new Point(0, 0);
@@ -46,8 +49,9 @@ namespace CoffeeFlow.Base
         private SolidColorBrush GridConnectionColor;
 
         private NetworkViewModel networkView;
-
-        public string DebugTest = "";
+        private double elapsedTime;
+        private SolidColorBrush GridColor = new SolidColorBrush(Color.FromArgb(255, (byte)50, (byte)50, (byte)50));
+        const int POINTS_ON_CURVE = 30;
 
         public Point GetAbsoluteCenter
         {
@@ -94,25 +98,30 @@ namespace CoffeeFlow.Base
             if (networkView == null)
                 networkView = SimpleIoc.Default.GetInstance<NetworkViewModel>();
 
+            elapsedTime = 0;
+
         }
 
+       
         protected override void OnRender(DrawingContext drawingContext)
         {
+            /*
             var now = DateTime.Now;
             var difference = now - previousDrawTime;
             previousDrawTime = now;
 
             var deltaTime = difference.TotalSeconds;
-
-            Paint(drawingContext, deltaTime);
-
+            elapsedTime += deltaTime;
+            */
+  
+            Paint(drawingContext);
             base.OnRender(drawingContext);
         }
 
-        private void Paint(DrawingContext drawingContext, double deltaTime)
+        private void Paint(DrawingContext drawingContext)
         {
             // Background
-            drawingContext.DrawRectangle(new SolidColorBrush(Color.FromArgb(255, (byte)50, (byte)50, (byte)50)), null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
+            drawingContext.DrawRectangle(GridColor, null, new Rect(0, 0, RenderSize.Width, RenderSize.Height));
 
             // Grid
             DrawGrid(drawingContext);
@@ -193,7 +202,6 @@ namespace CoffeeFlow.Base
                     second = temp;
                 }
 
-                const int POINTS_ON_CURVE = 500;
                 int connectionStrenght = networkView.BezierStrength;
 
                 double[] ptind = new double[] {     first.X, first.Y,
@@ -214,6 +222,9 @@ namespace CoffeeFlow.Base
 
         }
 
+        float ADDX = -5;
+        float ADDY = -15;
+        //Input: left, top, output: right, top
         private void DrawConnections(DrawingContext drawingContext)
         {
             int thickness = 1;
@@ -225,30 +236,22 @@ namespace CoffeeFlow.Base
             {
                 if (cp.IsConnected && cp.TypeOfInputOutput == InputOutputType.Output)
                 {
-                    Point position = cp.PointToScreen(new Point(0d, 0d));
-                    Point position2 = cp.Connection.PointToScreen(new Point(0d, 0d));
+      
+                    var output = cp.TransformToAncestor(MainWindow.GetWindow(this)).Transform(new Point(0, 0));
+                    var input = cp.Connection.TransformToAncestor(MainWindow.GetWindow(this)).Transform(new Point(0, 0));
 
-                    var first = cp.TransformToAncestor(MainWindow.GetWindow(this)).Transform(new Point(0, 0));
-                    var second = cp.Connection.TransformToAncestor(MainWindow.GetWindow(this)).Transform(new Point(0, 0));
-
-                    first.X += cp.Width / 2;
-                    first.Y += cp.Height / 2;
-
-                    second.X += cp.Width / 2;
-                    second.Y += cp.Height / 2;
+                    input.Y += 5;
+                    output.Y += 5;
 
                     // linear
                     //drawingContext.DrawLine(new Pen(color, thickness), first, second);
 
-                    // Bezier curve
-                    // how many points do you need on the curve?
-                    const int POINTS_ON_CURVE = 500;
                     int connectionStrenght = networkView.BezierStrength;
 
-                    double[] ptind = new double[] { first.X, first.Y,
-                                                    first.X + connectionStrenght, first.Y,
-                                                    second.X - connectionStrenght, second.Y,
-                                                    second.X, second.Y};
+                    double[] ptind = new double[] { output.X, output.Y,
+                                                    output.X + connectionStrenght, output.Y,
+                                                    input.X - connectionStrenght, input.Y,
+                                                    input.X, input.Y};
                     double[] p = new double[POINTS_ON_CURVE];
 
                     bezierCurve.Bezier2D(ptind, (POINTS_ON_CURVE) / 2, p);
@@ -329,7 +332,6 @@ namespace CoffeeFlow.Base
                     GridOffset.X -= x;
                     GridOffset.Y -= y;
 
-                    Debug.WriteLine(x.ToString() + " - " + y.ToString());
                 }
 
                 gridLastPos.X = Mouse.GetPosition(this).X;
@@ -357,47 +359,17 @@ namespace CoffeeFlow.Base
                 }
             }
         }
-
-        /*
-       private void OnMouseUp(object sender, MouseButtonEventArgs mouseButtonEventArgs)
-       {
-           gridLastPos.X = 0;
-           gridLastPos.Y = 0;
-
-
-           return;
-           if (Connector.CurrentConnection != null)
-           {
-               //Connector.StopConnecting();
-
-               //show list
-               MainWindow m = MainWindow.GetWindow(this) as MainWindow;
-
-               //FILTER NODES BASED ON DRAGGING NODE AND TYPE
-               PanelType nodeType = Connector.CurrentConnection.ParentNode.NodeType;
-
-               switch (nodeType)
-               {
-                       case PanelType.Property:
-                   {
-                       VariableNode current = Connector.CurrentConnection.ParentNode as VariableNode;
-                       m.lstAvailableNodes.CreateNodes(current.Type);
-                       break;
-                   }
-                   default:
-                   {
-                       m.lstAvailableNodes.CreateNodes(typeof(int));
-                       break;
-                   }
-               }
-
-               //show only nodes available to source node
-               //m.ShowNodeList();
-                
-           }
-
-       }
-
-       */
     }
+
+    class MyImage : System.Windows.Controls.Image
+    {
+        protected override void OnRender(DrawingContext dc)
+        {
+            base.OnRender(dc);
+
+            dc.DrawRectangle(System.Windows.Media.Brushes.Red, null, new Rect(0, 0, 100, 100));
+        }
+    }
+
 }
+

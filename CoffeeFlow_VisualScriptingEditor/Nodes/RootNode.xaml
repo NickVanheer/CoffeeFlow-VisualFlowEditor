@@ -16,7 +16,7 @@
         </Border.Background>
         <Grid Name="LayoutRoot">
             <TextBlock Text="{Binding NodeName}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" FontSize="14" Foreground="White" FontWeight="Bold"/>
-            <base:Connector x:Name="MainConnector" ConnectorType="ExecutionFlow" HorizontalAlignment="Left" Margin="157,10,-10,0" VerticalAlignment="Top"/>
+            <base:Connector x:Name="MainConnector" ConnectorType="ExecutionFlow" HorizontalAlignment="Right" Margin="0,24,-9,0" VerticalAlignment="Top"/>
             <Button Content="Button" Visibility="Collapsed" x:Name="btnDebug" HorizontalAlignment="Left" Margin="55,20,0,0" VerticalAlignment="Top" Width="75"/>
 
             <DockPanel Background="#FF272626" Height="Auto" VerticalAlignment="Bottom">

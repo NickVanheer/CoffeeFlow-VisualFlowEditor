@@ -1,0 +1,17 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:Nodes="clr-namespace:CoffeeFlow.Nodes"
+    xmlns:views="clr-namespace:CoffeeFlow.Views" x:Class="CoffeeFlow.Views.OpenLocalizationData"
+        Title="Open Localization File" MinHeight="105" Width="479" DataContext="{Binding Source={StaticResource Locator}}" ResizeMode="NoResize">
+    <Grid Background="{StaticResource GrayBackgroundBrush}">
+        <TextBlock HorizontalAlignment="Left" Margin="10,14,0,0" TextWrapping="Wrap" Text="Localization File" VerticalAlignment="Top" Foreground="{StaticResource ForegroundLightBrush}"/>
+        <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+            <TextBlock HorizontalAlignment="Left" Margin="25,54,0,0" TextWrapping="Wrap" Text="history:" VerticalAlignment="Top"/>
+            <ComboBox HorizontalAlignment="Left" Margin="38,54,0,0" VerticalAlignment="Top" Width="273"/>
+        </StackPanel>
+        <views:LocalizationListBox Margin="0,35,0,0" IsSelectButtonVisible="Hidden"></views:LocalizationListBox>
+        <Button Content="Load from disk"  FontSize="14"  Style="{StaticResource DarkButton}" HorizontalAlignment="Left" Command="{Binding Main.OpenLocalizationFile}" Margin="151,9,0,0" VerticalAlignment="Top" Width="137" Height="26"/>
+        <TextBlock HorizontalAlignment="Left" Margin="300,12,0,0" TextWrapping="Wrap" Text="{Binding Main.FileLoadInfo}" VerticalAlignment="Top" Foreground="{StaticResource ForegroundLightBrush}"/>
+    </Grid>
+</Window>

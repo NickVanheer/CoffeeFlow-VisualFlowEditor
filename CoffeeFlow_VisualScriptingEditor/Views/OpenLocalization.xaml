@@ -1,0 +1,18 @@
+﻿<Window x:Class="CoffeeFlow.Views.OpenCodeWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Open C# code" Height="105" Width="479" DataContext="{Binding Source={StaticResource Locator}}" ResizeMode="NoResize">
+    <Grid Background="{StaticResource GrayBackgroundBrush}">
+        <TextBlock HorizontalAlignment="Left" Margin="10,14,0,0" TextWrapping="Wrap" Text="C# file selector" VerticalAlignment="Top" Foreground="{StaticResource ForegroundLightBrush}"/>
+        <StackPanel Orientation="Horizontal" Visibility="Collapsed">
+            <TextBlock HorizontalAlignment="Left" Margin="25,54,0,0" TextWrapping="Wrap" Text="history:" VerticalAlignment="Top"/>
+            <ComboBox HorizontalAlignment="Left" Margin="38,54,0,0" VerticalAlignment="Top" Width="273"/>
+
+        </StackPanel>
+
+        <CheckBox Foreground="{StaticResource ForegroundLightBrush}" Content="Parse only the class with the same filename" IsChecked="{Binding Main.IsClassFileName}" Height="30" VerticalAlignment="Top" Margin="10,41,199,0"/>
+        <CheckBox Foreground="{StaticResource ForegroundLightBrush}" Content="Append to existing collection" IsChecked="{Binding Main.IsAppend}" Height="30" VerticalAlignment="Top" Margin="279,41,10,0"/>
+        <Button Content="Load from disk"  FontSize="14"  Style="{StaticResource DarkButton}" HorizontalAlignment="Left" Command="{Binding Main.OpenCodeFileFromFileCommand}" Margin="97,9,0,0" VerticalAlignment="Top" Width="191" Height="26"/>
+        <TextBlock HorizontalAlignment="Left" Margin="300,12,0,0" TextWrapping="Wrap" Text="{Binding Main.FileLoadInfo}" VerticalAlignment="Top" Foreground="{StaticResource ForegroundLightBrush}"/>
+    </Grid>
+</Window>

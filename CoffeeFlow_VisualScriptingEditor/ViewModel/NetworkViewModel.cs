@@ -44,6 +44,12 @@ namespace CoffeeFlow.ViewModel
             get { return _addNodeToGridCommand ?? (_addNodeToGridCommand = new RelayCommand<NodeWrapper>(AddNodeToGrid)); }
         }
 
+        private RelayCommand<LocalizationItem> _selectLocalizedStringCommand;
+        public RelayCommand<LocalizationItem> SelectLocalizedStringCommand
+        {
+            get { return _selectLocalizedStringCommand ?? (_selectLocalizedStringCommand = new RelayCommand<LocalizationItem>(SelectLocalizedString)); }
+        }
+
         private RelayCommand _SaveNodesCommand;
         public RelayCommand SaveNodesCommand
         {
@@ -112,6 +118,13 @@ namespace CoffeeFlow.ViewModel
             Connector destination = GetConnectorWithID(destinationID);
 
             Connector.ConnectPins(source, destination);
+        }
+
+        public void SelectLocalizedString(LocalizationItem s)
+        {
+            System.Windows.Controls.TextBox t = DynamicNode.GetCurrentEditTextBox();
+            if (t != null)
+                t.Text = s.Key;
         }
 
         public void AddNodeToGrid(NodeWrapper node)

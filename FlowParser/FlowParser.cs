@@ -1,5 +1,7 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -25,12 +27,30 @@ namespace UnityFlow
 
         SerializeableNodeViewModel current;
         List<object> callingClasses;
+        LocalizationData locData = null;
+
+        public TagResolveLanguage Language;
         public List<string> ErrorOutput { get; private set; }
 
         public void AddCaller(object obj)
         {
             if (obj != null)
                 this.callingClasses.Add(obj);
+        }
+
+        public void SetLocalizationData(LocalizationData data)
+        {
+            locData = data; //optimize
+        }
+
+        public void SetLanguageToEnglish()
+        {
+            Language = TagResolveLanguage.English;
+        }
+
+        public void SetLanguageToJapanese()
+        {
+            Language = TagResolveLanguage.Japanese;
         }
 
         public FlowParser()
@@ -43,6 +63,7 @@ namespace UnityFlow
 
         public FlowParser(string pathToNodes)
         {
+            SetLanguageToEnglish();
             SerializeNodes = new List<SerializeableNodeViewModel>();
             LoadNodes(pathToNodes);
 
@@ -223,7 +244,14 @@ namespace UnityFlow
 
                     if (t == typeof(string))
                     {
-                        argumentList.Add((string)argument.ArgValue);
+                        string value = (string)argument.ArgValue;
+
+                        if (argument.IsLocalizationTag)
+                        {
+                            string localized = GetLocalizedStringByKey(value, Language);
+                            value = localized;
+                        }
+                        argumentList.Add(value);
                     }
 
                     if (t == typeof(float))
@@ -265,6 +293,57 @@ namespace UnityFlow
 
             //TODO log error.
             return "System.String";
+        }
+
+        //Localization
+        private Dictionary<string, string> localizedTextEnglish;
+        private Dictionary<string, string> localizedTextJapanese;
+        private string missingTextString = "Localized text not found";
+
+
+        public void LoadLocalizedText(string path)
+        {
+            localizedTextEnglish = new Dictionary<string, string>();
+            localizedTextJapanese = new Dictionary<string, string>();
+
+            if (File.Exists(path))
+            {
+                string dataAsJson = File.ReadAllText(path);
+                LocalizationData loadedData = JsonConvert.DeserializeObject<LocalizationData>(dataAsJson);
+
+                for (int i = 0; i < loadedData.Items.Count; i++)
+                {
+                    localizedTextEnglish.Add(loadedData.Items[i].Key, loadedData.Items[i].ValueEnglish);
+                    localizedTextJapanese.Add(loadedData.Items[i].Key, loadedData.Items[i].ValueJapanese);
+                }
+
+                //Debug.Log("Data loaded, dictionary contains: " + localizedTextEnglish.Count + " entries");
+            }
+            else
+            {
+                //Debug.LogError("Cannot find localization file: " + filePath);
+            }
+        }
+
+        public string GetLocalizedStringByKey(string key, TagResolveLanguage language)
+        {
+            if (key == "")
+                return "[EMPTY KEY]";
+
+            Dictionary<string, string> dictionaryToUse;
+
+            if (language == TagResolveLanguage.English)
+                dictionaryToUse = localizedTextEnglish;
+            else
+                dictionaryToUse = localizedTextJapanese;
+
+            string result = missingTextString;
+            if (dictionaryToUse.ContainsKey(key))
+            {
+                result = dictionaryToUse[key].Replace("\\n", "\n"); //Get the text and also add the linebreaks
+            }
+
+            return result;
         }
     }
 
@@ -368,6 +447,8 @@ namespace UnityFlow
         public string ArgTypeString { get; set; }
         public object ArgValue { get; set; }
 
+        public bool IsLocalizationTag { get; set; }
+
         public bool ArgIsExistingVariable { get; set; }
         public string ArgExistingVariableName { get; set; }
         public int ArgumentConnectedToNodeID { get; set; }
@@ -386,4 +467,8 @@ namespace UnityFlow
         }
     }
 
+    public enum TagResolveLanguage
+    {
+        English, Japanese
+    }
 }

@@ -161,8 +161,7 @@ VerticalAlignment="Center"/>
 
         <Grid Grid.Row="1" Name="GridColumn1" Background="#4C000000">
             <views:NodeListWindow x:Name="lstAvailableNodes2" Visibility="Visible" IsCenter="False" HorizontalAlignment="Stretch" VerticalAlignment="Top" Margin="0,00,0,0" Height="604"  />
-
-
+  
             <Grid  Height="Auto" HorizontalAlignment="Left" Margin="10 0 0 0" VerticalAlignment="Bottom" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" >
                 <Grid.RowDefinitions>
                     <RowDefinition Height="30"></RowDefinition>
@@ -201,7 +200,8 @@ VerticalAlignment="Center"/>
                 </LinearGradientBrush>
             </Menu.Background>
             <MenuItem Header="_File" Foreground="#FFC7C6C6" >
-                <MenuItem Header="_Open Cs File"  Background="#FF272323" Foreground="#FF999797" Command="{Binding Main.OpenCodeWindowCommand}"/>
+                <MenuItem Header="_Open C# File"  Background="#FF272323" Foreground="#FF999797" Command="{Binding Main.OpenCodeWindowCommand}"/>
+                <MenuItem Header="_Open localization"  Background="#FF272323" Foreground="#FF999797" Command="{Binding Main.OpenLocalizationWindowCommand}"/>
                 <MenuItem Header="_New"  Background="#FF272323" Foreground="#FF999797" Command="{Binding Network.ClearNodesCommand}"/>
                 <MenuItem Header="_Save nodegraph" Background="#FF272323" Foreground="#FF999797" Command="{Binding Network.SaveNodesCommand}" />
                 <MenuItem Header="_Load nodegraph" Background="#FF272323" Foreground="#FF999797" Command="{Binding Network.LoadNodesCommand}" />

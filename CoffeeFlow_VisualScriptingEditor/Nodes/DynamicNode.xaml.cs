@@ -17,6 +17,7 @@ using CoffeeFlow.Base;
 using GalaSoft.MvvmLight.CommandWpf;
 using System.Xml.Serialization;
 using UnityFlow;
+using CoffeeFlow.Views;
 
 namespace CoffeeFlow.Nodes
 {
@@ -59,6 +60,9 @@ namespace CoffeeFlow.Nodes
             get { return _changeSize ?? (_changeSize = new RelayCommand(ChangeSize)); }
         }
 
+        //time-saving hack but it works
+        public static TextBox TextBoxToModify;
+
         public DynamicNode()
         {
             InitializeComponent();
@@ -93,6 +97,7 @@ namespace CoffeeFlow.Nodes
                 foreach (var item in stringTextBoxes)
                 {
                     item.Height = TextBoxHeight;
+                    item.Width = 220;
                     this.Height += 80;
                 }
             }
@@ -103,6 +108,7 @@ namespace CoffeeFlow.Nodes
                 foreach (var item in stringTextBoxes)
                 {
                     item.Height = NumericBoxHeight;
+                    item.Width = 130;
                     this.Height -= 80;
                 }
             }
@@ -130,24 +136,42 @@ namespace CoffeeFlow.Nodes
             bool isUnknown = true;
             if(type == "string")
             {
-                var stackPanel = new StackPanel { Orientation = Orientation.Vertical, Margin = BottomMargin };
-                var stackPanel2 = new StackPanel { Orientation = Orientation.Horizontal, Margin = BottomMargin };
+                var mainVerticalListStackPanel = new StackPanel { Orientation = Orientation.Vertical, Margin = BottomMargin };
 
-                TextBox value = new TextBox { Text = "Some value here.", HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch, TextWrapping = TextWrapping.Wrap, Height = NumericBoxHeight };
+                var stringHorizontalStackPanel = new StackPanel { Orientation = Orientation.Horizontal, Margin = BottomMargin};
+
+                TextBox txtValueField = new TextBox { Text = "Some value here.", HorizontalAlignment = System.Windows.HorizontalAlignment.Stretch, Width = 130, TextWrapping = TextWrapping.Wrap, Height = NumericBoxHeight };
+                Button PickLocalizationButton = new Button { Content = "LOC", Width = 30, Margin = new Thickness(3,0,0,0) };
+                CheckBox checkLocalized = new CheckBox { IsChecked = false, Content = "Is Localization Tag", Margin = new Thickness(10, 0, 0, 0) };
+
+                PickLocalizationButton.Click += delegate (object sender, RoutedEventArgs e)
+                {
+                    PickLocalizationButton_Click(sender, e, txtValueField);
+                    checkLocalized.IsChecked = true;
+                };
+
+                //button1.Click += delegate(object sender, EventArgs e) { button_Click(sender, e, "This is   From Button1", MessageType.B1); };  
+                //I now regret not doing this visually
+                stringHorizontalStackPanel.Children.Add(txtValueField);
+                stringHorizontalStackPanel.Children.Add(PickLocalizationButton);
+
                 Connector con = new Connector() { Name = "TextNodeConnector", TypeOfConnector = Base.ConnectorType.NodeParameter, ArgumentType = "string", Width = 15, Height = 15, Margin = new Thickness(0, 0, 5, 0), ParentNode = this, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, TypeOfInputOutput = InputOutputType.Input, OrderOfArgumentID = ArgumentCache.Count() };
                 argConnectors.Add(con);
 
+                var stackPanel2 = new StackPanel { Orientation = Orientation.Horizontal };
                 stackPanel2.Margin = new Thickness(0, 0, 7, 5);
                 stackPanel2.Children.Add(con);
                 stackPanel2.Children.Add(new TextBlock { Text = argumentName + ":", Width = LabelWidth, HorizontalAlignment = System.Windows.HorizontalAlignment.Left, Foreground = new SolidColorBrush(Colors.White) });
 
-                stackPanel.Children.Add(stackPanel2);
-                stackPanel.Children.Add(value);
-         
-                ArgumentList.Children.Add(stackPanel);
-                stringTextBoxes.Add(value);
+                mainVerticalListStackPanel.Children.Add(stackPanel2);
+                mainVerticalListStackPanel.Children.Add(stringHorizontalStackPanel);
+                mainVerticalListStackPanel.Children.Add(checkLocalized);
 
-                UIInputControls.Add(value);
+                //
+                ArgumentList.Children.Add(mainVerticalListStackPanel);
+                stringTextBoxes.Add(txtValueField);
+
+                UIInputControls.Add(txtValueField);
 
                 //
                 Argument behind = new Argument(argumentName, type);
@@ -158,6 +182,7 @@ namespace CoffeeFlow.Nodes
                 }
 
                 behind.ArgValue = "Some value here.";
+                behind.IsLocalizationTag = checkLocalized.IsChecked.Value;
 
                 if (argumentValue != null)
                     behind.ArgValue = argumentValue;
@@ -170,9 +195,16 @@ namespace CoffeeFlow.Nodes
                 myBinding.Path = new PropertyPath("ArgValue");
                 myBinding.Mode = BindingMode.TwoWay;
                 myBinding.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
-                BindingOperations.SetBinding(value, TextBox.TextProperty, myBinding);
+                BindingOperations.SetBinding(txtValueField, TextBox.TextProperty, myBinding);
 
-                NodeHeight += NumericBoxHeight + 10;
+                Binding myBindingCheck = new Binding();
+                myBindingCheck.Source = behind;
+                myBindingCheck.Path = new PropertyPath("IsLocalizationTag");
+                myBindingCheck.Mode = BindingMode.TwoWay;
+                myBindingCheck.UpdateSourceTrigger = UpdateSourceTrigger.PropertyChanged;
+                BindingOperations.SetBinding(txtValueField, TextBox.TextProperty, myBinding);
+
+                NodeHeight += NumericBoxHeight + 25;
                 isUnknown = false;
             }
 
@@ -320,6 +352,19 @@ namespace CoffeeFlow.Nodes
             //TODO: Enum
             this.Height = NodeHeight;
             ArgumentList.UpdateLayout();
+        }
+
+        private void PickLocalizationButton_Click(object sender, RoutedEventArgs e, TextBox toModify)
+        {
+            TextBoxToModify = toModify;
+
+            SelectLocalizedString w = new SelectLocalizedString();
+            w.ShowDialog();
+        }
+
+        public static TextBox GetCurrentEditTextBox()
+        {
+            return TextBoxToModify;
         }
 
         public override void Populate(SerializeableNodeViewModel node)

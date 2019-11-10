@@ -18,6 +18,7 @@ using CoffeeFlow.Nodes;
 using CoffeeFlow.Views;
 using Roslyn.Compilers.CSharp;
 using UnityFlow;
+using Newtonsoft.Json;
 
 namespace CoffeeFlow.ViewModel
 {
@@ -84,6 +85,22 @@ namespace CoffeeFlow.ViewModel
                 return variables;
             }
         }
+       
+        private ObservableCollection<LocalizationItem> localizationStrings = null;
+        public ObservableCollection<LocalizationItem> LocalizationStrings
+        {
+            get
+            {
+                if (localizationStrings == null)
+                {
+                    localizationStrings = new ObservableCollection<LocalizationItem>();
+                }
+
+                return localizationStrings;
+            }
+        }
+
+        //public LocalizationData LocalizationStrings { get; set; }
 
         public ObservableCollection<string> DebugList { get; set; }
 
@@ -143,17 +160,33 @@ namespace CoffeeFlow.ViewModel
             }
         }
 
-        private RelayCommand _OpenCodeFileFromFileCommand;
-        public RelayCommand OpenCodeFileFromFileCommand
-        {
-            get { return _OpenCodeFileFromFileCommand ?? (_OpenCodeFileFromFileCommand = new RelayCommand(OpenCodeFromFile)); }
-        }
 
         private RelayCommand _OpenCodeWindowCommand;
         public RelayCommand OpenCodeWindowCommand
         {
-            get { return _OpenCodeWindowCommand ?? (_OpenCodeWindowCommand = new RelayCommand(OpenCodePanel)); }
+            get { return _OpenCodeWindowCommand ?? (_OpenCodeWindowCommand = new RelayCommand(openCodeLoadPanelUI)); }
         }
+
+        private RelayCommand _OpenCodeFileFromFileCommand;
+        public RelayCommand OpenCodeFileFromFileCommand
+        {
+            get { return _OpenCodeFileFromFileCommand ?? (_OpenCodeFileFromFileCommand = new RelayCommand(openCodeFromFile)); }
+        }
+
+        //Localization
+        private RelayCommand _OpenLocalizationWindowCommand;
+        public RelayCommand OpenLocalizationWindowCommand
+        {
+            get { return _OpenLocalizationWindowCommand ?? (_OpenLocalizationWindowCommand = new RelayCommand(openLocalizationLoadPanelUI)); }
+        }
+
+
+        private RelayCommand _OpenLocalizationFile;
+        public RelayCommand OpenLocalizationFile
+        {
+            get { return _OpenLocalizationFile ?? (_OpenLocalizationFile = new RelayCommand(OpenLocalization)); }
+        }
+
 
         private string _newTriggerName = "Enter trigger name";
         public string NewTriggerName
@@ -193,14 +226,21 @@ namespace CoffeeFlow.ViewModel
             }
         }
 
-        public void OpenCodePanel()
+        private void openLocalizationLoadPanelUI()
+        {
+            OpenLocalizationData w = new OpenLocalizationData();
+            w.ShowDialog();
+        }
+
+        private void openCodeLoadPanelUI()
         {
             LogStatus("Ready to parse a C# code file", true);
             OpenCodeWindow w = new OpenCodeWindow();
             w.ShowDialog();
         }
 
-        public void OpenCodeFromFile()
+
+        private void openCodeFromFile()
         {
             OpenFileDialog openFileDialog1 = new OpenFileDialog();
 
@@ -243,7 +283,46 @@ namespace CoffeeFlow.ViewModel
 
             string className = Path.GetFileNameWithoutExtension(file);
             LogStatus("C# file " + className + ".cs parsed succesfully", true);
-            
+        }
+
+        private void OpenLocalization()
+        {
+            OpenFileDialog openFileDialog1 = new OpenFileDialog();
+
+            // Set filter options and filter index.
+            openFileDialog1.Filter = "JSON Files (.json)|*.json|All Files (*.*)|*.*";
+            openFileDialog1.FilterIndex = 1;
+            //openFileDialog1.InitialDirectory = Directory.GetCurrentDirectory();
+
+            openFileDialog1.Multiselect = false;
+
+            // Call the ShowDialog method to show the dialog box.
+            bool? userClickedOK = openFileDialog1.ShowDialog();
+
+            int added = 0;
+            // Process input if the user clicked OK.
+            if (userClickedOK == true)
+            {
+                string path = openFileDialog1.FileName;
+                string json = File.ReadAllText(path);
+                try
+                {
+                    var data = JsonConvert.DeserializeObject<LocalizationData>(json);
+                    LocalizationStrings.Clear();
+
+                    foreach (var item in data.Items)
+                    {
+                        LocalizationStrings.Add(item);
+                    }
+
+                    LogStatus("Succesfully parsed " + LocalizationStrings.Count + " localization keys", true);
+                }
+                catch (Exception e)
+                {
+                    LogStatus("Json File is not in the correct format", true);
+                    throw;
+                }
+            }
         }
 
         private RelayCommand _OpenDebug;

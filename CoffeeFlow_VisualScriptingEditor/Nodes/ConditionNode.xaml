@@ -15,7 +15,7 @@
             </LinearGradientBrush>
         </Border.Background>
         <Grid Margin="0">
-            <base:Connector ConnectorType="ExecutionFlow" x:Name="InExecutionConnector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-7,7,0,0" />
+            <base:Connector ConnectorType="ExecutionFlow" x:Name="InExecutionConnector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-7,32,0,0" />
             <base:Connector ConnectorType="ExecutionFlow" x:Name="OutExecutionConnectorTrue" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,23,-7,0"  />
 
             <Label HorizontalAlignment="Center" Margin="0,0,0,0"  VerticalAlignment="Top" FontSize="15"  Foreground="White" Content="Condition"/>
@@ -35,8 +35,8 @@
                 </StackPanel>
 
             </DockPanel>
-            <base:Connector ConnectorType="NodeParameter" IsNoLinkedInputField="True" ArgumentType="bool" x:Name="boolInput" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,33,0,0" />
-            <Label Content="Boolean value" Foreground="White" HorizontalAlignment="Left" Margin="23,27,0,0" VerticalAlignment="Top"/>
+            <base:Connector ConnectorType="NodeParameter" IsNoLinkedInputField="True" ArgumentType="bool" x:Name="boolInput" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="5,60,0,0" />
+            <Label Content="Boolean value" Foreground="White" HorizontalAlignment="Left" Margin="20,54,0,0" VerticalAlignment="Top"/>
             <Label Content="True" Foreground="White" HorizontalAlignment="Left" Margin="151,17,0,0" VerticalAlignment="Top"/>
             <base:Connector ConnectorType="ExecutionFlow" x:Name="OutExecutionConnectorFalse" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,48,-8,0"  />
             <Label Content="False" Foreground="White" HorizontalAlignment="Left" Margin="149,42,0,0" VerticalAlignment="Top"/>

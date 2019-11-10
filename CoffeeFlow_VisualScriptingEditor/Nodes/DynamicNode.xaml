@@ -11,12 +11,12 @@
         <Border.Background>
             <LinearGradientBrush EndPoint="0.5,1" StartPoint="0.5,0">
                 <GradientStop Color="#FF3A83CB" Offset="0"/>
-                <GradientStop Color="#FF154576" Offset="1"/>
+                <GradientStop Color="#FF2267AE" Offset="1"/>
             </LinearGradientBrush>
         </Border.Background>
         <Grid Margin="0">
-            <base:Connector ConnectorType="ExecutionFlow" x:Name="InExecutionConnector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-10,7,0,0" />
-            <base:Connector ConnectorType="ExecutionFlow" x:Name="OutExecutionConnector" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,7,-10,0"  />
+            <base:Connector ConnectorType="ExecutionFlow" x:Name="InExecutionConnector" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="-10,24,0,0" />
+            <base:Connector ConnectorType="ExecutionFlow" x:Name="OutExecutionConnector" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,-10,0"  />
             <StackPanel Orientation="Vertical" Name="ArgumentList" Height="Auto" Margin="7 0">
                 <Label HorizontalAlignment="Center" Margin="0,0,0,0"  VerticalAlignment="Top" FontSize="15"  Foreground="White" Content="{Binding DataContext.NodeName}"/>
             </StackPanel>

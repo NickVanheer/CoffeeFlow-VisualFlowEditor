@@ -64,6 +64,9 @@
     <Reference Include="Microsoft.Practices.ServiceLocation">
       <HintPath>packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
     <Reference Include="Roslyn.Compilers, Version=1.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>packages\Roslyn.Compilers.Common.1.2.20906.2\lib\net45\Roslyn.Compilers.dll</HintPath>
       <Private>True</Private>
@@ -125,6 +128,7 @@
       <DependentUpon>ConditionNode.xaml</DependentUpon>
     </Compile>
     <Compile Include="ValueConverters\EnabledToVisibilityConverter.cs" />
+    <Compile Include="ViewModel\LocalizationData.cs" />
     <Compile Include="ViewModel\NodeViewModel.cs" />
     <Compile Include="Nodes\DynamicNode.xaml.cs">
       <DependentUpon>DynamicNode.xaml</DependentUpon>
@@ -151,11 +155,20 @@
     <Compile Include="Views\InfoWindow.xaml.cs">
       <DependentUpon>InfoWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\LocalizationListBox.xaml.cs">
+      <DependentUpon>LocalizationListBox.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\NodeListWindow.xaml.cs">
       <DependentUpon>NodeListWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\OpenCodeWindow.xaml.cs">
       <DependentUpon>OpenCodeWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\OpenLocalizationData.xaml.cs">
+      <DependentUpon>OpenLocalizationData.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\SelectLocalizedString.xaml.cs">
+      <DependentUpon>SelectLocalizedString.xaml</DependentUpon>
     </Compile>
     <Page Include="Base\Connector.xaml">
       <SubType>Designer</SubType>
@@ -170,6 +183,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\InfoWindow.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LocalizationListBox.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -203,11 +220,19 @@
     </Page>
     <Page Include="Views\NodeListWindow.xaml">
       <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
+      <Generator>XamlIntelliSenseFileGenerator</Generator>
     </Page>
     <Page Include="Views\OpenCodeWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\OpenLocalizationData.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\SelectLocalizedString.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
     </Page>
   </ItemGroup>
   <ItemGroup>

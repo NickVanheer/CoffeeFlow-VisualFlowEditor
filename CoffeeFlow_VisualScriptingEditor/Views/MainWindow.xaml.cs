@@ -97,6 +97,10 @@ namespace CoffeeFlow
             IsNodePopupVisible = false;
         }
 
+        public void ShowStringList()
+        {
+            //ShowAtMousePosition(lstAvailableStrings);
+        }
 
         public MainWindow()
         {
